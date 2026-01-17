@@ -1,8 +1,13 @@
 import Button from "@/components/shared/Button";
 import { images } from "@/constants/images";
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { router } from 'expo-router';
 
 export default function Index() {
+  const handleStart = () => {
+    router.push('/suggestions');
+  };
+
   return (
     <View
       style={styles.pageContainer}
@@ -15,7 +20,7 @@ export default function Index() {
         <Text style={styles.regularText}>Dress without a fuss</Text>
       </View>
       <View style={[styles.contentBox, styles.contentBoxBottom]}>
-        <Button text="Start" onPress={() => console.log('testing...')} />
+        <Button text="Start" onPress={handleStart} />
       </View>
 
     </View>

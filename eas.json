@@ -6,13 +6,31 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "android": {
+        "buildType": "apk"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "WEATHER_API_KEY": "$WEATHER_API_KEY"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "WEATHER_API_KEY": "$WEATHER_API_KEY",
+        "FIREBASE_API_KEY": "$FIREBASE_API_KEY",
+        "FIREBASE_AUTH_DOMAIN": "$FIREBASE_AUTH_DOMAIN",
+        "FIREBASE_PROJECT_ID": "$FIREBASE_PROJECT_ID",
+        "FIREBASE_STORAGE_BUCKET": "$FIREBASE_STORAGE_BUCKET",
+        "FIREBASE_MESSAGING_SENDER_ID": "$FIREBASE_MESSAGING_SENDER_ID",
+        "FIREBASE_APP_ID": "$FIREBASE_APP_ID"
+      }
     }
   },
   "submit": {
