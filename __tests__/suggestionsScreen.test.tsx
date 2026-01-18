@@ -69,6 +69,11 @@ jest.mock('@/components/suggestions/SwipeableStack', () => ({
   SwipeableStack: 'SwipeableStack',
 }));
 
+// Mock WeatherCard component
+jest.mock('@/components/suggestions/WeatherCard', () => ({
+  WeatherCard: 'WeatherCard',
+}));
+
 describe('SuggestionsScreen - Task 1: Page Layout Structure', () => {
   it('should render all four main sections with light gray outlines', async () => {
     const { getByTestId } = render(<SuggestionsScreen />);
@@ -262,6 +267,113 @@ describe('SuggestionsScreen - Task 2: Header Content', () => {
       );
 
       expect(hasAlignCenter).toBe(true);
+    });
+  });
+});
+
+describe('SuggestionsScreen - Task 4: Weather Cards Section with Horizontal Scroll', () => {
+  it('should render horizontal scrollable weather cards container', async () => {
+    const { getByTestId } = render(<SuggestionsScreen />);
+
+    await waitFor(() => {
+      const weatherCardSection = getByTestId('weather-card-section');
+      expect(weatherCardSection).toBeTruthy();
+
+      const weatherScrollView = getByTestId('weather-scroll-view');
+      expect(weatherScrollView).toBeTruthy();
+    });
+  });
+
+  it('should display weather cards horizontally', async () => {
+    const { getByTestId } = render(<SuggestionsScreen />);
+
+    await waitFor(() => {
+      const weatherScrollView = getByTestId('weather-scroll-view');
+      // Check that horizontal prop is set to true
+      expect(weatherScrollView.props.horizontal).toBe(true);
+    });
+  });
+
+  it('should have paging enabled for card-by-card scrolling', async () => {
+    const { getByTestId } = render(<SuggestionsScreen />);
+
+    await waitFor(() => {
+      const weatherScrollView = getByTestId('weather-scroll-view');
+      expect(weatherScrollView.props.pagingEnabled).toBe(true);
+    });
+  });
+
+  it('should show next card partially visible', async () => {
+    const { getByTestId } = render(<SuggestionsScreen />);
+
+    await waitFor(() => {
+      const weatherScrollView = getByTestId('weather-scroll-view');
+      const contentContainerStyle = weatherScrollView.props.contentContainerStyle;
+
+      // Check that contentContainerStyle has padding to show partial card
+      const styles = Array.isArray(contentContainerStyle)
+        ? contentContainerStyle
+        : [contentContainerStyle];
+
+      const hasPadding = styles.some((style: any) =>
+        style && (style.paddingRight || style.paddingHorizontal)
+      );
+
+      expect(hasPadding).toBe(true);
+    });
+  });
+
+  it('should render weather cards container with children', async () => {
+    const { getByTestId } = render(<SuggestionsScreen />);
+
+    await waitFor(() => {
+      const weatherScrollView = getByTestId('weather-scroll-view');
+      expect(weatherScrollView).toBeTruthy();
+
+      // Check that the scroll view has children (weather cards)
+      expect(weatherScrollView.props.children).toBeDefined();
+    });
+  });
+
+  it('should have scroll event handler for detecting scroll position', async () => {
+    const { getByTestId } = render(<SuggestionsScreen />);
+
+    await waitFor(() => {
+      const weatherScrollView = getByTestId('weather-scroll-view');
+      // Check that onScroll or onMomentumScrollEnd is defined
+      expect(
+        weatherScrollView.props.onScroll ||
+        weatherScrollView.props.onMomentumScrollEnd
+      ).toBeDefined();
+    });
+  });
+
+  it('should have showsHorizontalScrollIndicator set appropriately', async () => {
+    const { getByTestId } = render(<SuggestionsScreen />);
+
+    await waitFor(() => {
+      const weatherScrollView = getByTestId('weather-scroll-view');
+      // Scroll indicator should be visible or hidden based on design
+      expect(weatherScrollView.props.showsHorizontalScrollIndicator).toBeDefined();
+    });
+  });
+});
+
+describe('SuggestionsScreen - Outfit Cards Horizontal Centering', () => {
+  it('should center outfit cards with content inset and snapping', async () => {
+    const { getByTestId } = render(<SuggestionsScreen />);
+
+    await waitFor(() => {
+      const outfitScrollView = getByTestId('outfit-scroll-view');
+
+      expect(outfitScrollView.props.horizontal).toBe(true);
+      expect(outfitScrollView.props.snapToAlignment).toBe('center');
+      expect(outfitScrollView.props.snapToInterval).toBeDefined();
+
+      const contentInset = outfitScrollView.props.contentInset;
+      expect(contentInset).toBeDefined();
+      expect(contentInset.left).toBeGreaterThan(0);
+      expect(contentInset.right).toBeGreaterThan(0);
     });
   });
 });

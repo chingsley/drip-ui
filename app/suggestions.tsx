@@ -1,7 +1,89 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, Dimensions } from 'react-native';
+import { WeatherCard } from '@/components/suggestions/WeatherCard';
+import { colors } from '@/constants/colors';
+import OutfitCard from '@/components/suggestions/OutfitCard';
+import { drawBorder } from '@/utils';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const CARD_WIDTH = SCREEN_WIDTH * 0.65; // 55% of screen width for main card
+const CARD_SPACING = 12;
+// const PAGE_WIDTH = SCREEN_WIDTH; // Full width for paging
+const OUTFIT_CARD_WIDTH = 275;
+const OUTFIT_CARD_GAP = 35;
+const OUTFIT_SIDE_INSET = (SCREEN_WIDTH - OUTFIT_CARD_WIDTH) / 2;
 
 export default function SuggestionsScreen() {
+  const [selectedDayIndex, setSelectedDayIndex] = useState(0);
+
+  // Static weather data for initial implementation
+  const weatherData = [
+    {
+      day: 'Today' as const,
+      temperature: 15,
+      feelsLike: 10,
+      condition: 'Partly Cloudy',
+      icon: 'partly-cloudy',
+    },
+    {
+      day: 'Tomorrow' as const,
+      temperature: 12,
+      feelsLike: 8,
+      condition: 'Cloudy',
+      icon: 'cloudy',
+    },
+    {
+      day: 'Tomorrow' as const,
+      temperature: 12,
+      feelsLike: 8,
+      condition: 'Sunny',
+      icon: 'cloudy',
+    },
+  ];
+
+  const handleDayChange = (index: number) => {
+    if (weatherData[index]) {
+      console.log(`fetching weather info for the swiped day....`);
+      console.log('Details of the swiped weather card:', weatherData[index]);
+    }
+    // In the future, you can fetch weather data for weatherData[index].day
+  };
+
+  const handleScroll = (event: any) => {
+    const scrollPosition = event.nativeEvent.contentOffset.x;
+    const newIndex = Math.round(scrollPosition / (CARD_WIDTH + CARD_SPACING));
+
+    if (newIndex !== selectedDayIndex) {
+      setSelectedDayIndex(newIndex);
+      handleDayChange(newIndex);
+    }
+    // TODO: Update suggestions based on selected day (Task 17)
+  };
+
+  const outfit1Images = [
+    require('@/assets/clothes/shirt1.png'),
+    require('@/assets/clothes/pants1.png'),
+    require('@/assets/clothes/shoes1.png'),
+  ];
+
+  const outfit2Images = [
+    require('@/assets/clothes/shirt2.png'),
+    require('@/assets/clothes/pants2.png'),
+    require('@/assets/clothes/shoes2.png'),
+  ];
+
+  const outfit3Images = [
+    require('@/assets/clothes/shirt3.png'),
+    require('@/assets/clothes/pants2.png'),
+    require('@/assets/clothes/shoes1.png'),
+  ];
+
+  const outfit4Images = [
+    require('@/assets/clothes/dress1.png'),
+    // require('@/assets/clothes/pants2.png'),
+    require('@/assets/clothes/shoes2.png'),
+  ];
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -35,12 +117,51 @@ export default function SuggestionsScreen() {
 
         {/* Weather Card Section */}
         <View testID="weather-card-section" style={styles.weatherCardSection}>
-          <Text style={styles.placeholderText}>Weather Card Section</Text>
+          <ScrollView
+            testID="weather-scroll-view"
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.weatherScrollContent}
+            onMomentumScrollEnd={handleScroll}
+            snapToInterval={CARD_WIDTH + CARD_SPACING}
+            decelerationRate="fast"
+          >
+            {weatherData.map((weather, index) => (
+              <View
+                key={index}
+                style={styles.weatherCardWrapper}
+              >
+                <WeatherCard
+                  day={weather.day}
+                  temperature={weather.temperature}
+                  feelsLike={weather.feelsLike}
+                  condition={weather.condition}
+                  icon={weather.icon}
+                />
+              </View>
+            ))}
+          </ScrollView>
         </View>
 
-        {/* Dress Suggestion Section */}
-        <View testID="dress-suggestion-section" style={styles.dressSuggestionSection}>
-          <Text style={styles.placeholderText}>Dress Suggestion Section</Text>
+        {/* Outfit Suggestion Section */}
+        <View testID="dress-suggestion-section" style={styles.outfitSuggestionSection}>
+          <ScrollView
+            testID="outfit-scroll-view"
+            horizontal
+            pagingEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.outfitScrollContent}
+            snapToInterval={OUTFIT_CARD_WIDTH + OUTFIT_CARD_GAP}
+            decelerationRate="fast"
+          >
+            <View style={styles.outfitCardWrapper}><OutfitCard isActive imageUrls={outfit1Images} /></View>
+            <View style={styles.outfitCardWrapper}><OutfitCard isActive={false} imageUrls={outfit2Images} /></View>
+            <View style={styles.outfitCardWrapper}><OutfitCard isActive={false} imageUrls={outfit3Images} /></View>
+            <View style={styles.outfitCardWrapper}><OutfitCard isActive={false} imageUrls={outfit4Images} /></View>
+          </ScrollView>
+          <View style={styles.outfitArea}>
+            <Text style={styles.outfitAreaText}>Your daily outfit plan</Text>
+          </View>
         </View>
 
         {/* Tabs Section */}
@@ -51,6 +172,7 @@ export default function SuggestionsScreen() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -63,16 +185,13 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
-  // Task 1: Page Layout Structure - Section outlines (light gray for visual feedback)
   headerSection: {
-    minHeight: 120,
-    borderWidth: 2,
-    borderColor: '#D3D3D3', // Light gray outline
-    padding: 20,
-    paddingTop: 60, // Account for status bar
+    ...drawBorder(1, colors.LIGHT_GRAY),
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    paddingTop: 70, // Account for status bar
     justifyContent: 'center',
   },
-  // Task 2: Header Content
   headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -91,7 +210,7 @@ const styles = StyleSheet.create({
   locationIcon: {
     width: 20,
     height: 20,
-    tintColor: '#6B46C1', // Purple color
+    tintColor: colors.PRIMARY,
   },
   locationText: {
     fontSize: 18,
@@ -99,34 +218,62 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   outfitText: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 18,
+    fontWeight: '600',
     color: '#000',
   },
   outfitIcon: {
     width: 24,
     height: 24,
-    tintColor: '#6B46C1', // Purple color
+    tintColor: colors.PRIMARY,
   },
   weatherCardSection: {
-    minHeight: 180,
-    borderWidth: 2,
-    borderColor: '#D3D3D3', // Light gray outline
-    padding: 10,
-    justifyContent: 'center',
+    ...drawBorder(1, colors.LIGHT_GRAY),
+    paddingVertical: 5,
   },
-  dressSuggestionSection: {
+  weatherScrollContent: {
+    alignItems: 'center',
+    gap: CARD_SPACING,
+    paddingHorizontal: (SCREEN_WIDTH - CARD_WIDTH) / 2,
+  },
+  weatherCardWrapper: {
+    justifyContent: 'center',
+    width: CARD_WIDTH,
+  },
+  outfitSuggestionSection: {
     flex: 1,
-    minHeight: 400,
+    ...drawBorder(2, 'yellow'),
+    position: 'relative',
+  },
+  outfitArea: {
     borderWidth: 2,
-    borderColor: '#D3D3D3', // Light gray outline
-    padding: 10,
+    borderColor: colors.PRIMARY,
+    borderRadius: 10,
+    zIndex: -2,
+    backgroundColor: colors.LIGHT_GRAY,
+    left: '50%', // Move starting point to the middle of parent
+    marginLeft: -150, // Shift left by exactly half the width (300 / 2)
+    // transform: [{ translateX: -150 }], // 300 / 2 = 150 // Same as line above
+    width: 300,
+    position: 'absolute',
+    height: '100%',
+  },
+  outfitAreaText: {
+    fontSize: 18,
+    fontWeight: '500',
+    textAlign: 'center',
+    marginVertical: 8,
+  },
+  outfitScrollContent: {
+    gap: 35,
+    paddingHorizontal: OUTFIT_SIDE_INSET,
+  },
+  outfitCardWrapper: {
     justifyContent: 'center',
   },
   tabsSection: {
     minHeight: 80,
-    borderWidth: 2,
-    borderColor: '#D3D3D3', // Light gray outline
+    ...drawBorder(1, colors.LIGHT_GRAY),
     padding: 10,
     justifyContent: 'center',
   },
