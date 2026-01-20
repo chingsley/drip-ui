@@ -11,7 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { OutfitSuggestion } from '@/types/clothing';
-import { OutfitCard } from './OutfitCard';
+import { OutfitCard } from './OutfitCard_old';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
@@ -41,9 +41,9 @@ export const SwipeableStack: React.FC<SwipeableStackProps> = ({
 
   const handleSwipeComplete = (direction: 'left' | 'right') => {
     'worklet';
-    
+
     runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
-    
+
     if (direction === 'left' && onSwipeLeft) {
       runOnJS(onSwipeLeft)(currentOutfit);
     } else if (direction === 'right' && onSwipeRight) {
