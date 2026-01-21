@@ -1,7 +1,8 @@
-import { Image, StyleSheet, Text, View, ImageSourcePropType } from 'react-native';
+import { Image, StyleSheet, View, ImageSourcePropType } from 'react-native';
 import React from 'react';
 import { colors } from '@/constants/colors';
 import { drawBorder } from '@/utils';
+
 
 interface OutfitCardProp {
   isActive: boolean;
@@ -31,9 +32,7 @@ export default OutfitCard;
 
 const styles = StyleSheet.create({
   outfitCard: {
-    // ...drawBorder(1, 'red'),// I will use below line instead, after testing
-    borderWidth: 1,
-    borderColor: colors.LIGHT_GRAY,
+    ...drawBorder(2, colors.LIGHT_GRAY, true),
     width: 275,
     height: '90%',
     borderRadius: 10,

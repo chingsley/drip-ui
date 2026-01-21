@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { WeatherData, LocationCoordinates } from '@/types/weather';
 import { WeatherService } from '@/services/weather/weatherService';
 
@@ -16,7 +16,7 @@ export const useWeather = () => {
     }
   }, []);
 
-  const fetchWeatherByCoordinates = async (coords: LocationCoordinates) => {
+  const fetchWeatherByCoordinates = useCallback(async (coords: LocationCoordinates) => {
     setLoading(true);
     setError(null);
 
@@ -34,9 +34,9 @@ export const useWeather = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchWeatherByLocation = async (location: string) => {
+  const fetchWeatherByLocation = useCallback(async (location: string) => {
     setLoading(true);
     setError(null);
 
@@ -54,7 +54,7 @@ export const useWeather = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const clearCache = async () => {
     await WeatherService.clearCache();
@@ -69,4 +69,3 @@ export const useWeather = () => {
     clearCache,
   };
 };
-

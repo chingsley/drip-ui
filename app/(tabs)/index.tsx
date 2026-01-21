@@ -164,10 +164,10 @@ export default function SuggestionsScreen() {
           </View>
         </View>
 
-        {/* Tabs Section */}
-        <View testID="tabs-section" style={styles.tabsSection}>
+        {/* Page-specific Tabs Section */}
+        {/* <View testID="tabs-section" style={styles.tabsSection}>
           <Text style={styles.placeholderText}>Tabs Section</Text>
-        </View>
+        </View> */}
       </ScrollView>
     </View>
   );
@@ -186,16 +186,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   headerSection: {
-    ...drawBorder(1, colors.LIGHT_GRAY),
+    ...drawBorder(1, colors.BLACK),
     paddingHorizontal: 20,
     paddingBottom: 10,
-    paddingTop: 70, // Account for status bar
+    paddingTop: 60, // Account for status bar
     justifyContent: 'center',
   },
   headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    // marginTop: 5,
+    // ...drawBorder(1, colors.BLACK, true),
   },
   headerLeft: {
     flexDirection: 'row',
@@ -213,14 +215,16 @@ const styles = StyleSheet.create({
     tintColor: colors.PRIMARY,
   },
   locationText: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 24,
+    fontWeight: '500',
     color: '#000',
+    letterSpacing: 0.5,
   },
   outfitText: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 24,
+    fontWeight: '500',
     color: '#000',
+    letterSpacing: 0.5,
   },
   outfitIcon: {
     width: 24,
@@ -228,8 +232,9 @@ const styles = StyleSheet.create({
     tintColor: colors.PRIMARY,
   },
   weatherCardSection: {
-    ...drawBorder(1, colors.LIGHT_GRAY),
-    paddingVertical: 5,
+    ...drawBorder(1, 'red'),
+    // paddingVertical: 1,
+    marginBottom: 5,
   },
   weatherScrollContent: {
     alignItems: 'center',
@@ -256,7 +261,7 @@ const styles = StyleSheet.create({
     // transform: [{ translateX: -150 }], // 300 / 2 = 150 // Same as line above
     width: 300,
     position: 'absolute',
-    height: '100%',
+    height: '98%',
   },
   outfitAreaText: {
     fontSize: 18,
@@ -272,7 +277,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabsSection: {
-    minHeight: 80,
+    minHeight: 90,
     ...drawBorder(1, colors.LIGHT_GRAY),
     padding: 10,
     justifyContent: 'center',

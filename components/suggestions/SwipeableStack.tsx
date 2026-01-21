@@ -116,6 +116,14 @@ export const SwipeableStack: React.FC<SwipeableStackProps> = ({
     };
   });
 
+  const likeIndicatorStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(translateX.value, [0, SWIPE_THRESHOLD / 2], [0, 1]),
+  }));
+
+  const passIndicatorStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(translateX.value, [-SWIPE_THRESHOLD / 2, 0], [1, 0]),
+  }));
+
   if (!currentOutfit) {
     return (
       <View style={styles.emptyContainer}>
@@ -129,7 +137,9 @@ export const SwipeableStack: React.FC<SwipeableStackProps> = ({
     <View style={styles.container}>
       {/* Next Card (Behind) */}
       {nextOutfit && (
-        <Animated.View style={[styles.cardContainer, styles.nextCard, nextCardStyle]}>
+        <Animated.View
+          style={[styles.cardContainer, styles.nextCard, nextCardStyle]}
+        >
           <OutfitCard
             outfit={nextOutfit}
             onFavoriteToggle={onFavoriteToggle}
@@ -150,13 +160,7 @@ export const SwipeableStack: React.FC<SwipeableStackProps> = ({
             style={[
               styles.swipeIndicator,
               styles.likeIndicator,
-              useAnimatedStyle(() => ({
-                opacity: interpolate(
-                  translateX.value,
-                  [0, SWIPE_THRESHOLD / 2],
-                  [0, 1]
-                ),
-              })),
+              likeIndicatorStyle,
             ]}
           >
             <Text style={styles.indicatorText}>LIKE</Text>
@@ -166,13 +170,7 @@ export const SwipeableStack: React.FC<SwipeableStackProps> = ({
             style={[
               styles.swipeIndicator,
               styles.passIndicator,
-              useAnimatedStyle(() => ({
-                opacity: interpolate(
-                  translateX.value,
-                  [-SWIPE_THRESHOLD / 2, 0],
-                  [1, 0]
-                ),
-              })),
+              passIndicatorStyle,
             ]}
           >
             <Text style={styles.indicatorText}>PASS</Text>
