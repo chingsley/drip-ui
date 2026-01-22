@@ -8,7 +8,7 @@ interface ButtonProps {
   onPress: ((event: GestureResponderEvent) => void) | undefined;
   loading?: boolean;
   disabled?: boolean;
-  style?: Object;
+  style?: object;
 }
 
 const Button = ({ onPress, text, loading, disabled, style }: ButtonProps) => {

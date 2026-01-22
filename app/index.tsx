@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 
 export default function Index() {
   const handleStart = () => {
-    router.push('/suggestions');
+    router.push('/(tabs)');
   };
 
   return (

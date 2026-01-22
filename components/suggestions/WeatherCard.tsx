@@ -102,7 +102,7 @@ export const WeatherCard: React.FC<WeatherCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 30,
     marginRight: 12,
     display: 'flex',
@@ -123,9 +123,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cloudImg: {
-    height: 68,
-    width: 68,
-    resizeMode: 'contain',
+    height: 60,
+    width: 85,
+    resizeMode: 'cover',
   },
   conditionText: {
     fontSize: 14,
@@ -146,7 +146,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '200',
     letterSpacing: 0.5,
-    opacity: 1,
   },
   todayDayText: {
     color: colors.WHITE,

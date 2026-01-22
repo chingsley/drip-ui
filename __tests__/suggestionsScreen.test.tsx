@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
-import SuggestionsScreen from '@/app/suggestions';
+import SuggestionsScreen from '@/app/(tabs)/index';
 
 // Mock @expo/vector-icons
 jest.mock('@expo/vector-icons', () => ({

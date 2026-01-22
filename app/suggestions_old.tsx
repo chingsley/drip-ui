@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -43,7 +43,6 @@ export default function SuggestionsScreen() {
 
   const {
     preferences,
-    favorites,
     toggleFavorite,
     isFavorite,
   } = usePreferences();
@@ -56,20 +55,7 @@ export default function SuggestionsScreen() {
     updateFavoriteStatus,
   } = useSuggestions(weather, preferences);
 
-  // Initialize app on mount
-  useEffect(() => {
-    initializeApp();
-  }, []);
-
-  // Fetch weather when location changes
-  console.log('3. location: ', location);
-  useEffect(() => {
-    if (location) {
-      fetchWeatherByCoordinates(location);
-    }
-  }, [location]);
-
-  const initializeApp = async () => {
+  const initializeApp = useCallback(async () => {
     try {
       // Check/request location permission
       if (!permissionGranted) {
@@ -95,7 +81,20 @@ export default function SuggestionsScreen() {
     } finally {
       setInitializing(false);
     }
-  };
+  }, [permissionGranted, requestPermission, getCurrentLocation]);
+
+  // Initialize app on mount
+  useEffect(() => {
+    initializeApp();
+  }, [initializeApp]);
+
+  // Fetch weather when location changes
+  console.log('3. location: ', location);
+  useEffect(() => {
+    if (location) {
+      fetchWeatherByCoordinates(location);
+    }
+  }, [location, fetchWeatherByCoordinates]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
