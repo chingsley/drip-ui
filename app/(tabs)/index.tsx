@@ -6,7 +6,7 @@ import OutfitCard from '@/components/suggestions/OutfitCard';
 import { drawBorder } from '@/utils';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const CARD_WIDTH = SCREEN_WIDTH * 0.65; // 55% of screen width for main card
+const CARD_WIDTH = SCREEN_WIDTH * 0.60; // 55% of screen width for main card
 const CARD_SPACING = 12;
 // const PAGE_WIDTH = SCREEN_WIDTH; // Full width for paging
 const OUTFIT_CARD_WIDTH = 275;
@@ -233,8 +233,7 @@ const styles = StyleSheet.create({
   },
   weatherCardSection: {
     ...drawBorder(1, 'red'),
-    // paddingVertical: 1,
-    marginBottom: 5,
+    marginBottom: 10,
   },
   weatherScrollContent: {
     alignItems: 'center',
@@ -247,8 +246,9 @@ const styles = StyleSheet.create({
   },
   outfitSuggestionSection: {
     flex: 1,
-    ...drawBorder(2, 'yellow'),
+    // ...drawBorder(2, 'yellow', true),
     position: 'relative',
+    marginBottom: 5,
   },
   outfitArea: {
     borderWidth: 2,
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     // transform: [{ translateX: -150 }], // 300 / 2 = 150 // Same as line above
     width: 300,
     position: 'absolute',
-    height: '98%',
+    height: '100%',
   },
   outfitAreaText: {
     fontSize: 18,

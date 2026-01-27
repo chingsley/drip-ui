@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, ImageSourcePropType } from 'react-native
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 import { images } from '@/constants/images';
+import { drawBorder } from '@/utils';
 
 export interface WeatherCardProps {
   day: 'Today' | 'Tomorrow';
@@ -103,11 +104,12 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
     paddingVertical: 5,
-    paddingHorizontal: 30,
+    // paddingHorizontal: 22,
     marginRight: 12,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    // ...drawBorder(1, 'red', true),
   },
   todayCard: {
     backgroundColor: colors.PRIMARY,
@@ -121,6 +123,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
+    // ...drawBorder(1, 'red', true),
   },
   cloudImg: {
     height: 60,
@@ -141,6 +144,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
+    // ...drawBorder(1, 'red', true),
   },
   dayText: {
     fontSize: 20,
