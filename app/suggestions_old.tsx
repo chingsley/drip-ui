@@ -29,8 +29,8 @@ export default function SuggestionsScreen() {
     locationName,
     loading: locationLoading,
     error: locationError,
-    permissionGranted,
-    requestPermission,
+    locationPermissionGranted,
+    requestLocationPermission,
     getCurrentLocation,
   } = useLocation();
 
@@ -58,15 +58,15 @@ export default function SuggestionsScreen() {
   const initializeApp = useCallback(async () => {
     try {
       // Check/request location permission
-      if (!permissionGranted) {
-        const granted = await requestPermission();
+      if (!locationPermissionGranted) {
+        const granted = await requestLocationPermission();
         if (!granted) {
           Alert.alert(
             'Location Permission Required',
             'This app needs your location to suggest outfits based on your local weather.',
             [
               { text: 'Cancel', style: 'cancel' },
-              { text: 'Grant Permission', onPress: requestPermission },
+              { text: 'Grant Permission', onPress: requestLocationPermission },
             ]
           );
           return;
@@ -81,7 +81,7 @@ export default function SuggestionsScreen() {
     } finally {
       setInitializing(false);
     }
-  }, [permissionGranted, requestPermission, getCurrentLocation]);
+  }, [locationPermissionGranted, requestLocationPermission, getCurrentLocation]);
 
   // Initialize app on mount
   useEffect(() => {

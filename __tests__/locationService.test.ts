@@ -8,13 +8,13 @@ describe('LocationService', () => {
     jest.clearAllMocks();
   });
 
-  describe('requestPermissions', () => {
+  describe('requestLocationPermission', () => {
     it('should return true when permission is granted', async () => {
       (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValueOnce({
         status: 'granted',
       });
 
-      const result = await LocationService.requestPermissions();
+      const result = await LocationService.requestLocationPermission();
 
       expect(result).toBe(true);
       expect(Location.requestForegroundPermissionsAsync).toHaveBeenCalled();
@@ -25,7 +25,7 @@ describe('LocationService', () => {
         status: 'denied',
       });
 
-      const result = await LocationService.requestPermissions();
+      const result = await LocationService.requestLocationPermission();
 
       expect(result).toBe(false);
     });

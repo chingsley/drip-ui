@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Dimensions } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, Dimensions, Alert } from 'react-native';
 import { WeatherCard } from '@/components/suggestions/WeatherCard';
 import { colors } from '@/constants/colors';
 import OutfitCard from '@/components/suggestions/OutfitCard';
 import { drawBorder } from '@/utils';
+import { useLocation } from '@/hooks/useLocation';
+import { clotheData, weatherData } from '@/dummy-data';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH * 0.60; // 55% of screen width for main card
@@ -15,31 +17,50 @@ const OUTFIT_SIDE_INSET = (SCREEN_WIDTH - OUTFIT_CARD_WIDTH) / 2;
 
 export default function SuggestionsScreen() {
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
+  const [initializing, setInitializing] = useState(true);
 
-  // Static weather data for initial implementation
-  const weatherData = [
-    {
-      day: 'Today' as const,
-      temperature: 15,
-      feelsLike: 10,
-      condition: 'Partly Cloudy',
-      icon: 'partly-cloudy',
-    },
-    {
-      day: 'Tomorrow' as const,
-      temperature: 12,
-      feelsLike: 8,
-      condition: 'Cloudy',
-      icon: 'cloudy',
-    },
-    {
-      day: 'Tomorrow' as const,
-      temperature: 12,
-      feelsLike: 8,
-      condition: 'Sunny',
-      icon: 'cloudy',
-    },
-  ];
+  const {
+    location,
+    locationPermissionGranted,
+    requestLocationPermission,
+    getCurrentLocation,
+  } = useLocation();
+
+
+  const initializeApp = useCallback(async () => {
+    try {
+      // Check/request location permission
+      if (!locationPermissionGranted) {
+        const granted = await requestLocationPermission();
+        if (!granted) {
+          Alert.alert(
+            'Location Permission Required',
+            'This app needs your location to suggest outfits based on your local weather.',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Grant Permission', onPress: requestLocationPermission },
+            ]
+          );
+          return;
+        }
+      }
+
+      // Get current location
+      await getCurrentLocation();
+    } catch (error) {
+      console.error('Failed to initialize app:', error);
+      Alert.alert('Error', 'Failed to initialize app. Please try again.');
+    } finally {
+      setInitializing(false);
+    }
+  }, [locationPermissionGranted, requestLocationPermission, getCurrentLocation]);
+
+  // Initialize app on mount
+  useEffect(() => {
+    initializeApp();
+  }, []);
+
+
 
   const handleDayChange = (index: number) => {
     if (weatherData[index]) {
@@ -60,30 +81,6 @@ export default function SuggestionsScreen() {
     // TODO: Update suggestions based on selected day (Task 17)
   };
 
-  const outfit1Images = [
-    require('@/assets/clothes/shirt1.png'),
-    require('@/assets/clothes/pants1.png'),
-    require('@/assets/clothes/shoes1.png'),
-  ];
-
-  const outfit2Images = [
-    require('@/assets/clothes/shirt2.png'),
-    require('@/assets/clothes/pants2.png'),
-    require('@/assets/clothes/shoes2.png'),
-  ];
-
-  const outfit3Images = [
-    require('@/assets/clothes/shirt3.png'),
-    require('@/assets/clothes/pants2.png'),
-    require('@/assets/clothes/shoes1.png'),
-  ];
-
-  const outfit4Images = [
-    require('@/assets/clothes/dress1.png'),
-    // require('@/assets/clothes/pants2.png'),
-    require('@/assets/clothes/shoes2.png'),
-  ];
-
   return (
     <View style={styles.container}>
       <ScrollView
@@ -100,7 +97,7 @@ export default function SuggestionsScreen() {
                 source={require('@/assets/images/location-icon.png')}
                 style={styles.locationIcon}
               />
-              <Text style={styles.locationText}>Halifax</Text>
+              <Text style={styles.locationText}>{location && location.name}</Text>
             </View>
 
             {/* Right side: "My Outfits" text + outfit icon */}
@@ -154,10 +151,10 @@ export default function SuggestionsScreen() {
             snapToInterval={OUTFIT_CARD_WIDTH + OUTFIT_CARD_GAP}
             decelerationRate="fast"
           >
-            <View style={styles.outfitCardWrapper}><OutfitCard isActive imageUrls={outfit1Images} /></View>
-            <View style={styles.outfitCardWrapper}><OutfitCard isActive={false} imageUrls={outfit2Images} /></View>
-            <View style={styles.outfitCardWrapper}><OutfitCard isActive={false} imageUrls={outfit3Images} /></View>
-            <View style={styles.outfitCardWrapper}><OutfitCard isActive={false} imageUrls={outfit4Images} /></View>
+            <View style={styles.outfitCardWrapper}><OutfitCard isActive imageUrls={clotheData.outfit1Images} /></View>
+            <View style={styles.outfitCardWrapper}><OutfitCard isActive={false} imageUrls={clotheData.outfit2Images} /></View>
+            <View style={styles.outfitCardWrapper}><OutfitCard isActive={false} imageUrls={clotheData.outfit3Images} /></View>
+            <View style={styles.outfitCardWrapper}><OutfitCard isActive={false} imageUrls={clotheData.outfit4Images} /></View>
           </ScrollView>
           <View style={styles.outfitArea}>
             <Text style={styles.outfitAreaText}>Your daily outfit plan</Text>

@@ -10,11 +10,6 @@ export interface WeatherData {
   windSpeed?: number;
 }
 
-export interface LocationCoordinates {
-  latitude: number;
-  longitude: number;
-}
-
 export interface WeatherApiResponse {
   location: {
     name: string;

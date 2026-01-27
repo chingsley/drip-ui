@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react';
-import { LocationCoordinates } from '@/types/weather';
+import { LocationType } from '@/types/location';
 import { LocationService } from '@/services/location/locationService';
 
 export const useLocation = () => {
-  const [location, setLocation] = useState<LocationCoordinates | null>(null);
-  const [locationName, setLocationName] = useState<string | null>(null);
+  const [location, setLocation] = useState<LocationType | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [permissionGranted, setPermissionGranted] = useState<boolean>(false);
+  const [locationPermissionGranted, setLocationPermissionGranted] = useState<boolean>(false);
 
-  const requestPermission = async () => {
+  const requestLocationPermission = async () => {
     try {
-      const granted = await LocationService.requestPermissions();
+      const granted = await LocationService.requestLocationPermission();
       console.log('1... ', { granted });
-      setPermissionGranted(granted);
+      setLocationPermissionGranted(granted);
       return granted;
     } catch (err) {
       setError('Failed to request location permission');
@@ -29,8 +28,7 @@ export const useLocation = () => {
       const result = await LocationService.getCurrentLocationWithName();
       console.log('2... ', { result });
       if (result) {
-        setLocation(result.coordinates);
-        setLocationName(result.name);
+        setLocation(result);
       } else {
         setError('Failed to get current location');
       }
@@ -44,16 +42,15 @@ export const useLocation = () => {
 
   useEffect(() => {
     // Check permission on mount
-    LocationService.hasPermissions().then(setPermissionGranted);
+    LocationService.hasPermissions().then(setLocationPermissionGranted);
   }, []);
 
   return {
     location,
-    locationName,
     loading,
     error,
-    permissionGranted,
-    requestPermission,
+    locationPermissionGranted,
+    requestLocationPermission,
     getCurrentLocation,
   };
 };

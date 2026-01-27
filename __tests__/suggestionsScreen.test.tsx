@@ -26,8 +26,8 @@ jest.mock('@/hooks/useLocation', () => ({
     locationName: 'Halifax',
     loading: false,
     error: null,
-    permissionGranted: true,
-    requestPermission: jest.fn(),
+    locationPermissionGranted: true,
+    requestLocationPermission: jest.fn(),
     getCurrentLocation: jest.fn(),
   }),
 }));

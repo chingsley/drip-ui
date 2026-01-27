@@ -6,7 +6,7 @@ export class LocationService {
    * Requests location permissions from the user
    * @returns true if permission granted, false otherwise
    */
-  static async requestPermissions(): Promise<boolean> {
+  static async requestLocationPermission(): Promise<boolean> {
     try {
       const { status, granted } = await Location.requestForegroundPermissionsAsync();
       console.log('Permission response:', { status, granted });
@@ -40,7 +40,7 @@ export class LocationService {
       // Check if we have permissions
       const hasPermission = await this.hasPermissions();
       if (!hasPermission) {
-        const granted = await this.requestPermissions();
+        const granted = await this.requestLocationPermission();
         if (!granted) {
           throw new Error('Location permission denied');
         }
